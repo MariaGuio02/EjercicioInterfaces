@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- A-Frame -->
+    <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
+
+        <style>
+            body {
+            margin: 0;
+            cursor: none;
+            }
+        </style>
+
+    <title>Tarea Interfaces</title>
+</head>
+
+<body>
+
+    <a-scene>
+
+        <!-- Assets -->
+        <a-assets>
+
+            <!-- Modelo 3D -->
+            <a-asset-item
+                id="modelo3d"
+                src="https://mariaguio02.github.io/EjercicioInterfaces/Radio.gltf">
+            </a-asset-item>
+
+            <!-- Música -->
+            <audio
+                id="musica"
+                src="https://mariaguio02.github.io/EjercicioInterfaces/cancion.mp3"
+                preload="auto"
+                crossorigin="anonymous">
+            </audio>
+
+        </a-assets>
+
+        <!-- Luz ambiente -->
+        <a-entity
+            id="luzAmbiente"
+            light="type: ambient; intensity: 1.2; color: #FFFFFF">
+        </a-entity>
+
+        <!-- MODELO RADIO -->
+        <a-entity
+            id="radio"
+            gltf-model="#modelo3d"
+            position="0 0 -4"
+            rotation="0 0 0"
+
+            scale="15 15 15"
+
+            sound="src: #musica;
+                   autoplay: false;
+                   loop: true;
+                   volume: 0.2"
+
+            animation__enter="property: scale;
+                              to: 18 18 18;
+                              startEvents: mouseenter;
+                              dur: 300"
+
+            animation__leave="property: scale;
+                              to: 15 15 15;
+                              startEvents: mouseleave;
+                              dur: 300">
+        </a-entity>
+
+        <!-- Piso -->
+        <a-plane
+            id="piso"
+            position="0 -0.5 -4"
+            rotation="-90 0 0"
+            width="12"
+            height="12"
+            color="#DCDCDC">
+        </a-plane>
+
+        <!-- Fondo -->
+        <a-sky color="#ECECEC"></a-sky>
+
+        <!-- Cámara -->
+        <a-camera position="0 1.6 0">
+
+            <!-- Cursor animado -->
+            <a-cursor
+                animation="property: scale;
+                           dir: alternate;
+                           dur: 700;
+                           loop: true;
+                           to: 1.5 1.5 1.5">
+
+                <!-- Texto sobre el cursor -->
+                <a-text
+                    id="textoClick"
+                    value="Click para activar musica"
+                    position="0 0.25 0"
+                    align="center"
+                    color="black"
+                    scale="0.25 0.25 0.25">
+                </a-text>
+
+            </a-cursor>
+
+        </a-camera>
+
+    </a-scene>
+
+    <script>
+
+        const radio = document.querySelector('#radio');
+        const audio = document.querySelector('#musica');
+        const piso = document.querySelector('#piso');
+        const texto = document.querySelector('#textoClick');
+
+        let musicaIniciada = false;
+
+        // ACTIVAR MUSICA AL HACER CLICK
+        document.body.addEventListener('click', () => {
+
+            if (!musicaIniciada) {
+
+                audio.play();
+
+                musicaIniciada = true;
+
+                // ocultar texto
+                texto.setAttribute('visible', false);
+            }
+
+        });
+
+        // CUANDO EL MOUSE ENTRA
+        radio.addEventListener('mouseenter', () => {
+
+            // subir volumen
+            audio.volume = 1.0;
+
+            // iluminar piso
+            piso.setAttribute('color', '#FFF2A6');
+
+        });
+
+        // CUANDO EL MOUSE SALE
+        radio.addEventListener('mouseleave', () => {
+
+            // bajar volumen
+            audio.volume = 0.2;
+
+            // volver color normal
+            piso.setAttribute('color', '#DCDCDC');
+
+        });
+
+    </script>
+
+</body>
+</html>
