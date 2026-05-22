@@ -121,19 +121,35 @@
         let musicaIniciada = false;
 
         // ACTIVAR MUSICA AL HACER CLICK
+        function iniciarMusica() {
+
+        audio.play();
+
+        musicaIniciada = true;
+
+        // ocultar texto
+        texto.setAttribute('visible', false);
+
+    }
+
+        // Computador
         document.body.addEventListener('click', () => {
 
             if (!musicaIniciada) {
+            iniciarMusica();
+        }
 
-                audio.play();
+    });
 
-                musicaIniciada = true;
+        // Celular
+        document.body.addEventListener('touchstart', () => {
 
-                // ocultar texto
-                texto.setAttribute('visible', false);
-            }
+            if (!musicaIniciada) {
+            iniciarMusica();
+        }
 
-        });
+    });
+
 
         // CUANDO EL MOUSE ENTRA
         radio.addEventListener('mouseenter', () => {
