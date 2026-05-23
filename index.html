@@ -3,17 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- A-Frame -->
     <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
-
-        <style>
-            body {
-            margin: 0;
-            cursor: none;
-            }
-        </style>
-
+    <style>
+        body { margin: 0; }
+    </style>
     <title>Tarea Interfaces</title>
 </head>
 
@@ -21,55 +14,117 @@
 
     <a-scene>
 
-        <!-- Assets -->
         <a-assets>
-
-            <!-- Modelo 3D -->
-            <a-asset-item
-                id="modelo3d"
+            <a-asset-item id="modelo3d"
                 src="https://mariaguio02.github.io/EjercicioInterfaces/Radio.gltf">
             </a-asset-item>
 
-            <!-- Música -->
-            <audio
-                id="musica"
+            <audio id="cancion1"
                 src="https://mariaguio02.github.io/EjercicioInterfaces/cancion.mp3"
-                preload="auto"
-                crossorigin="anonymous">
+                preload="auto" crossorigin="anonymous">
+            </audio>
+            <audio id="cancion2"
+                src="https://mariaguio02.github.io/EjercicioInterfaces/cancion2.mp3"
+                preload="auto" crossorigin="anonymous">
+            </audio>
+            <audio id="cancion3"
+                src="https://mariaguio02.github.io/EjercicioInterfaces/cancion3.mp3"
+                preload="auto" crossorigin="anonymous">
             </audio>
 
+            <img id="imgAnterior"  src="https://mariaguio02.github.io/EjercicioInterfaces/btn_anterior.png">
+            <img id="imgPlay"      src="https://mariaguio02.github.io/EjercicioInterfaces/btn_play.png">
+            <img id="imgPausa"     src="https://mariaguio02.github.io/EjercicioInterfaces/btn_pausa.png">
+            <img id="imgSiguiente" src="https://mariaguio02.github.io/EjercicioInterfaces/btn_siguiente.png">
+            <img id="imgVolumen"   src="https://mariaguio02.github.io/EjercicioInterfaces/btn_volumen.png">
         </a-assets>
 
         <!-- Luz ambiente -->
-        <a-entity
-            id="luzAmbiente"
-            light="type: ambient; intensity: 1.2; color: #FFFFFF">
-        </a-entity>
+        <a-entity light="type: ambient; intensity: 1.25; color: #FFFFFF"></a-entity>
 
         <!-- MODELO RADIO -->
         <a-entity
             id="radio"
             gltf-model="#modelo3d"
-            position="0 0 -4"
-            rotation="0 0 0"
-
-            scale="15 15 15"
-
-            sound="src: #musica;
-                   autoplay: false;
-                   loop: true;
-                   volume: 0.2"
-
-            animation__enter="property: scale;
-                              to: 18 18 18;
-                              startEvents: mouseenter;
-                              dur: 300"
-
-            animation__leave="property: scale;
-                              to: 15 15 15;
-                              startEvents: mouseleave;
-                              dur: 300">
+            position="0 1.5 -4"
+            scale="7 7 7">
         </a-entity>
+
+        <!-- ===== BOTONES DEL REPRODUCTOR ===== -->
+
+        <!-- Boton ANTERIOR -->
+        <a-image
+            id="btnAnterior"
+            class="clickable"
+            src="#imgAnterior"
+            position="-1.15 2.3 -3.6"
+            width="0.2"
+            height="0.2"
+            transparent="true">
+        </a-image>
+
+        <!-- Boton PLAY / PAUSA -->
+        <a-image
+            id="btnPlay"
+            class="clickable"
+            src="#imgPlay"
+            position="-0.66 2.3 -3.6"
+            width="0.2"
+            height="0.2"
+            transparent="true">
+        </a-image>
+
+        <!-- Boton SIGUIENTE -->
+        <a-image
+            id="btnSiguiente"
+            class="clickable"
+            src="#imgSiguiente"
+            position="-0.2 2.3 -3.6"
+            width="0.2"
+            height="0.2"
+            transparent="true">
+        </a-image>
+
+        <!-- ===== CONTROL DE VOLUMEN ===== -->
+
+        <!-- Linea de la barra de volumen (plano delgado, mas ancha) -->
+        <a-plane
+            id="barraVolumen"
+            position="-0.74 0.62 -3.6"
+            width="0.75"
+            height="0.03"
+            color="#DCDCDC"
+            opacity="0.8">
+        </a-plane>
+
+        <!-- Extremo izquierdo: etiqueta min -->
+        <a-text
+            value="vol-"
+            position="-1.22 0.62 -3.6"
+            align="center"
+            color="#DCDCDC"
+            scale="0.45 0.45 0.45">
+        </a-text>
+
+        <!-- Extremo derecho: etiqueta max -->
+        <a-text
+            value="vol+"
+            position="-0.25 0.62 -3.6"
+            align="center"
+            color="#DCDCDC"
+            scale="0.45 0.45 0.45">
+        </a-text>
+
+        <!-- Icono arrastrable de volumen (mas grande) -->
+        <a-image
+            id="btnVolumen"
+            class="clickable"
+            src="#imgVolumen"
+            position="-0.74 0.62 -3.59"
+            width="0.16"
+            height="0.16"
+            transparent="true">
+        </a-image>
 
         <!-- Piso -->
         <a-plane
@@ -82,96 +137,246 @@
         </a-plane>
 
         <!-- Fondo -->
-        <a-sky color="#ECECEC"></a-sky>
+        <a-sky color="#CCF5FF"></a-sky>
 
-        <!-- Cámara -->
+        <!-- Camara con cursor visible -->
         <a-camera position="0 1.6 0">
-
-            <!-- Cursor animado -->
             <a-cursor
+                id="cursor"
+                color="#000000"
+                opacity="0.85"
+                geometry="primitive: ring; radiusInner: 0.016; radiusOuter: 0.026"
+                raycaster="objects: .clickable, #radio"
+                fuse="false"
                 animation="property: scale;
                            dir: alternate;
                            dur: 700;
                            loop: true;
-                           to: 1.5 1.5 1.5">
-
-                <!-- Texto sobre el cursor -->
-                <a-text
-                    id="textoClick"
-                    value="Click para activar musica"
-                    position="0 0.25 0"
-                    align="center"
-                    color="black"
-                    scale="0.25 0.25 0.25">
-                </a-text>
-
+                           to: 1.2 1.2 1.2">
             </a-cursor>
-
         </a-camera>
 
     </a-scene>
 
     <script>
 
-        const radio = document.querySelector('#radio');
-        const audio = document.querySelector('#musica');
-        const piso = document.querySelector('#piso');
-        const texto = document.querySelector('#textoClick');
+        // ===== DETECCION DE CELULAR =====
+        const esCelular = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
+        // ===== REFERENCIAS =====
+        const cursor       = document.querySelector('#cursor');
+        const radio        = document.querySelector('#radio');
+        const btnPlay      = document.querySelector('#btnPlay');
+        const btnAnterior  = document.querySelector('#btnAnterior');
+        const btnSiguiente = document.querySelector('#btnSiguiente');
+        const btnVolumen   = document.querySelector('#btnVolumen');
+        const barraVolumen = document.querySelector('#barraVolumen');
+
+        // Fuse activado en todos los dispositivos:
+        // al quedarse el cursor sobre un elemento 1 segundo, se activa solo
+        cursor.setAttribute('fuse', true);
+        cursor.setAttribute('fuse-timeout', 800);
+
+        // ===== COLOR DEL CURSOR: blanco sobre modelo y botones, negro afuera =====
+        // Los botones tienen imagenes oscuras, el modelo es oscuro → cursor blanco encima
+        [radio, btnAnterior, btnPlay, btnSiguiente, btnVolumen, barraVolumen].forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.setAttribute('color', '#FFFFFF');
+                cursor.setAttribute('opacity', '1');
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.setAttribute('color', '#000000');
+                cursor.setAttribute('opacity', '0.85');
+            });
+        });
+
+        const canciones = [
+            document.querySelector('#cancion1'),
+            document.querySelector('#cancion2'),
+            document.querySelector('#cancion3')
+        ];
+
+        let cancionActual  = 0;
         let musicaIniciada = false;
+        let reproduciendo  = false;
 
-        // ACTIVAR MUSICA AL HACER CLICK
-        function iniciarMusica() {
+        // ===== VOLUMEN =====
+        const BARRA_MIN_X = -1.115;
+        const BARRA_MAX_X = -0.365;
+        let volumen = 0.5;
+        let arrastrando = false;
 
-        audio.play();
 
-        musicaIniciada = true;
+        // ===== ILUMINACION AL HOVER =====
 
-        // ocultar texto
-        texto.setAttribute('visible', false);
-
-    }
-
-        // Computador
-        document.body.addEventListener('click', () => {
-
-            if (!musicaIniciada) {
-            iniciarMusica();
+        function agregarHover(boton) {
+            boton.addEventListener('mouseenter', () => {
+                boton.setAttribute('material',
+                    'emissive: #FFFF00; emissiveIntensity: 0.7; opacity: 1; transparent: true');
+            });
+            boton.addEventListener('mouseleave', () => {
+                boton.setAttribute('material',
+                    'emissive: #000000; emissiveIntensity: 0; opacity: 0.9; transparent: true');
+            });
         }
 
-    });
+        agregarHover(btnAnterior);
+        agregarHover(btnPlay);
+        agregarHover(btnSiguiente);
 
-        // Celular
-        document.body.addEventListener('touchstart', () => {
+        // Hover especial para el icono de volumen
+        btnVolumen.addEventListener('mouseenter', () => {
+            btnVolumen.setAttribute('material',
+                'emissive: #88AAFF; emissiveIntensity: 0.6; opacity: 1; transparent: true');
+        });
+        btnVolumen.addEventListener('mouseleave', () => {
+            if (!arrastrando) {
+                btnVolumen.setAttribute('material',
+                    'emissive: #000000; emissiveIntensity: 0; opacity: 0.9; transparent: true');
+            }
+        });
 
-            if (!musicaIniciada) {
-            iniciarMusica();
+
+        // ===== AUDIO =====
+
+        function detenerTodas() {
+            canciones.forEach(c => {
+                c.pause();
+                c.currentTime = 0;
+            });
         }
 
-    });
+        function reproducirActual() {
+            detenerTodas();
+            canciones[cancionActual].volume = volumen;
+            canciones[cancionActual].play();
+            reproduciendo = true;
+            btnPlay.setAttribute('src', '#imgPausa');
+        }
+
+        // La musica NO inicia sola al abrir la pagina.
+        // Solo inicia cuando el usuario hace click en uno de los tres botones.
 
 
-        // CUANDO EL MOUSE ENTRA
-        radio.addEventListener('mouseenter', () => {
+        // ===== BOTONES =====
 
-            // subir volumen
-            audio.volume = 1.0;
-
-            // iluminar piso
-            piso.setAttribute('color', '#FFF2A6');
-
+        btnPlay.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (!musicaIniciada) {
+                musicaIniciada = true;
+                reproducirActual();
+                return;
+            }
+            if (reproduciendo) {
+                canciones[cancionActual].pause();
+                reproduciendo = false;
+                btnPlay.setAttribute('src', '#imgPlay');
+            } else {
+                canciones[cancionActual].play();
+                reproduciendo = true;
+                btnPlay.setAttribute('src', '#imgPausa');
+            }
         });
 
-        // CUANDO EL MOUSE SALE
-        radio.addEventListener('mouseleave', () => {
-
-            // bajar volumen
-            audio.volume = 0.2;
-
-            // volver color normal
-            piso.setAttribute('color', '#DCDCDC');
-
+        btnSiguiente.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (!musicaIniciada) {
+                musicaIniciada = true;
+            }
+            cancionActual = (cancionActual + 1) % canciones.length;
+            reproducirActual();
         });
+
+        btnAnterior.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (!musicaIniciada) {
+                musicaIniciada = true;
+            }
+            cancionActual = (cancionActual - 1 + canciones.length) % canciones.length;
+            reproducirActual();
+        });
+
+
+        // ===== CONTROL DE VOLUMEN POR ARRASTRE =====
+
+        let mouseDownEnVolumen = false;
+
+        btnVolumen.addEventListener('mousedown', (e) => {
+            mouseDownEnVolumen = true;
+            arrastrando = true;
+            e.stopPropagation();
+        });
+
+        // Escuchar movimiento del mouse en la escena
+        document.querySelector('a-scene').addEventListener('mousemove', (evt) => {
+            if (!arrastrando) return;
+
+            // Obtener la posicion del raycaster en el plano de la barra (z fijo)
+            const cursor = document.querySelector('#cursor');
+            if (!cursor || !cursor.components || !cursor.components.raycaster) return;
+
+            const intersections = cursor.components.raycaster.intersections;
+            if (!intersections || intersections.length === 0) return;
+
+            const punto = intersections[0].point;
+
+            // Clampear la posicion X dentro de los extremos de la barra
+            const nuevoX = Math.max(BARRA_MIN_X, Math.min(BARRA_MAX_X, punto.x));
+
+            // Mover el icono
+            const posActual = btnVolumen.getAttribute('position');
+            btnVolumen.setAttribute('position', {
+                x: nuevoX,
+                y: posActual.y,
+                z: posActual.z
+            });
+
+            // Calcular volumen (0 a 1)
+            volumen = (nuevoX - BARRA_MIN_X) / (BARRA_MAX_X - BARRA_MIN_X);
+
+            // Aplicar volumen a la cancion actual si esta reproduciendo
+            if (musicaIniciada) {
+                canciones[cancionActual].volume = volumen;
+            }
+        });
+
+        // Soltar el arrastre con mouseup o touchend
+        document.addEventListener('mouseup', () => {
+            if (arrastrando) {
+                arrastrando = false;
+                mouseDownEnVolumen = false;
+                btnVolumen.setAttribute('material',
+                    'emissive: #000000; emissiveIntensity: 0; opacity: 0.9; transparent: true');
+            }
+        });
+
+        // ===== SOPORTE TACTIL PARA VOLUMEN =====
+        btnVolumen.addEventListener('touchstart', (e) => {
+            arrastrando = true;
+            e.stopPropagation();
+        }, { passive: true });
+
+        document.addEventListener('touchend', () => {
+            arrastrando = false;
+        }, { passive: true });
+
+        // Tambien hacer que el click en la barra mueva el icono directamente
+        barraVolumen.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const cursor = document.querySelector('#cursor');
+            if (!cursor || !cursor.components || !cursor.components.raycaster) return;
+            const intersections = cursor.components.raycaster.intersections;
+            if (!intersections || intersections.length === 0) return;
+            const punto = intersections[0].point;
+            const nuevoX = Math.max(BARRA_MIN_X, Math.min(BARRA_MAX_X, punto.x));
+            const posActual = btnVolumen.getAttribute('position');
+            btnVolumen.setAttribute('position', { x: nuevoX, y: posActual.y, z: posActual.z });
+            volumen = (nuevoX - BARRA_MIN_X) / (BARRA_MAX_X - BARRA_MIN_X);
+            if (musicaIniciada) canciones[cancionActual].volume = volumen;
+        });
+
+        // Agregar clase clickable a la barra tambien
+        barraVolumen.classList.add('clickable');
 
     </script>
 
